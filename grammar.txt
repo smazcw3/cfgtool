@@ -5,12 +5,12 @@ grammar = statement*
 statement = IDENTIFIER "=" expression ";"
           ;
 
-expression = simpleexpression "|" expression
-           | simpleexpression
+expression = component "|" expression
+           | component
            ;
 
-simpleexpression = element +
-                 ;
+component = element +
+          ;
 
 element = term "*"
         | term "+"
