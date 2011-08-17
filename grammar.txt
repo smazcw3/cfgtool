@@ -1,0 +1,28 @@
+
+grammar = statement*
+        ;
+
+statement = IDENTIFIER "=" expression ";"
+          ;
+
+expression = simpleexpression "|" expression
+           | simpleexpression
+           ;
+
+simpleexpression = element +
+                 ;
+
+element = term "*"
+        | term "+"
+        | term "?"
+        | "~" term
+        | "&" term
+        | term
+        ;
+
+term = IDENTIFIER
+     | STRING
+     | "(" expression ")"
+     ;
+
+
