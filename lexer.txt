@@ -1,5 +1,5 @@
 
-token = identifier
+token : identifier
       | string
       | special_token
       | spacing
@@ -9,26 +9,26 @@ token = identifier
       ;
 
 
-identifier = identifier_first identifier_rest*
+identifier : identifier_first identifier_rest*
            ;
 
-identifier_first = letter | "_"
+identifier_first : letter | "_"
                  ;
 
-identifier_rest = letter | digit | "_"
+identifier_rest : letter | digit | "_"
                 ;
 
-string = "\"" (string_char | escape_sequence) * "\""
+string : "\"" (string_char | escape_sequence) * "\""
        ;
 
-string_char = ~("\"" | "\n") char
+string_char : ~("\"" | "\n") char
             ;
 
-escape_sequence = normal_escape
+escape_sequence : normal_escape
                 | digit_escape
                 ;
 
-normal_escape = "\\a"
+normal_escape : "\\a"
               | "\\b"
               | "\\f"
               | "\\n"
@@ -41,32 +41,32 @@ normal_escape = "\\a"
               | "\\\n"
               ; 
 
-digit_escape = "\\" digit digit digit
+digit_escape ; "\\" digit digit digit
              | "\\" digit digit
              | "\\" digit
              ;
 
-special_token = ":" | ";" | "*" | "+" | "?"
+special_token : ":" | ";" | "*" | "+" | "?"
               | "(" | ")"
               ;
 
-spacing = space +
+spacing : space +
         ;
 
-space = " "
+space : " "
       | "\t"
       | "\r"
       | "\n"
       ;
 
-comment = "#" not_newline *
+comment : "#" not_newline *
         ;
 
-not_newline = ~("\n") char
+not_newline : ~("\n") char
             ;
 
-error = char
+error : char
       ;
 
-end = ~(char)
+end : ~(char)
     ;

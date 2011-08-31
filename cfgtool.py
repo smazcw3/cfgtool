@@ -21,10 +21,12 @@ def main(argv):
     compute_follow(grammar)
 
     for stmt in grammar.statements:
+       print "################### %s ###################\n" % stmt.identifier
        print stmt
-       print "\nFirst = %s;" % ", ".join(list(stmt.first))
-       print "\nFollow = %s;" % ", ".join(list(stmt.follow))
-       print "\n\n"
+       print "\n#Epsilon = %s;" % stmt.epsilon
+       print "\n#First = %s;" % ", ".join(list(stmt.first))
+       print "\n#Follow = %s;" % ", ".join(list(stmt.follow))
+       print "\n\n\n"
 
 
 if __name__ == "__main__":
