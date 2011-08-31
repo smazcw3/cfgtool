@@ -1,25 +1,23 @@
 
-grammar = statement *
+grammar : statement *
         ;
 
-statement = IDENTIFIER "=" expression ";"
+statement : IDENTIFIER ":" expression ";"
           ;
 
-expression = component ("|" component) *
+expression : component ("|" component) *
            ;
 
-component = element +
+component : element +
           ;
 
-element = term "*"
+element : term "*"
         | term "+"
         | term "?"
-        | "~" term
-        | "&" term
         | term
         ;
 
-term = IDENTIFIER
+term : IDENTIFIER
      | STRING
      | "(" expression ")"
      | "(" ")"

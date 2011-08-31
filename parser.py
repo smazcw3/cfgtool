@@ -89,25 +89,34 @@ class Term():
 
 
 class Parser():
-    def __init__(self, data, name):
-        self._lexer = Lexer(data)
+    def __init__(self, data, name, errfn = None):
         self._name = name
         self._token = None
         self._error = False
+
+        def report(msg):
+            print >> sys.stderr, msg
+
+        if not errfn: errfn = report
+        self._errfn = errfn
+        self._lexer = Lexer(data, name, errfn)
 
     def parse(self):
         return self.parse_grammar()
 
     def _next_token(self):
-        self._token = self._lexer.parse_token()
-        if self._token.token == Token.ERROR:
-            self._report_error(self._token.error_msg, self._token)
+        while True:
+            self._token = self._lexer.parse_token()
+            if self._token.token == Token.WHITESPACE or \
+               self._token.token == Token.COMMENT: continue
+            break
+        
         return self._token
 
     def _report_error(self, msg, token):
         self._error = True
-        print >> sys.stderr, "%s:%s:%s: %s" % (self._name, token.line,
-            token.column, msg)
+        self._errfn("parser: %s[%s:%s]: %s" %\
+                    (self._name, token.line, token.column, msg))
 
     def parse_grammar(self):
         self._next_token()
@@ -133,7 +142,7 @@ class Parser():
         if tk.token == Token.IDENTIFIER:
             identifier = tk.tkstr
             tk = self._next_token()
-            if tk.token == Token.EQUALS:
+            if tk.token == Token.COLON:
                 self._next_token()
                 expression = self._parse_expression()
                 tk =  self._token
@@ -143,7 +152,7 @@ class Parser():
                 else:
                     msg = "expecting `;' at the end of statement"
             else:
-                msg = "expecting `=' for statement"
+                msg = "expecting `:' for statement"
         else:
             msg = "expecting identifier at the begining of statement"
 
@@ -167,22 +176,19 @@ class Parser():
         elements.append(elm)
         while (not self._token.token == Token.PIPE) and\
               (not self._token.token == Token.SEMICOLON) and\
+              (not self._token.token == Token.CLOSE_PARENTHESIS) and\
               (not self._token.token == Token.END):
             elm = self._parse_element()
             elements.append(elm)
         return Component(elements)
 
     def _parse_element(self):
-        tk = self._token
-        modifier = None
-        if tk.token == Token.TILDE or tk.token == Token.TILDE:
-            modifier = tk.tkstr
-            tk = self._next_token()
         term = self._parse_term()
+        modifier = None
         tk = self._token
-        if not modifier and (tk.token == Token.STAR or \
-                             tk.token == Token.PLUS or \
-                             tk.token == Token.QUESTION_MARK):
+        if tk.token == Token.STAR or \
+           tk.token == Token.PLUS or \
+           tk.token == Token.QUESTION_MARK:
             modifier = tk.tkstr
             self._next_token()
         return Element(term, modifier)

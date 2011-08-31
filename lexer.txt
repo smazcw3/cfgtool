@@ -46,8 +46,8 @@ digit_escape = "\\" digit digit digit
              | "\\" digit
              ;
 
-special_token = "=" | ";" | "*" | "+" | "?"
-              | "~" | "&" | "(" | ")"
+special_token = ":" | ";" | "*" | "+" | "?"
+              | "(" | ")"
               ;
 
 spacing = space +
