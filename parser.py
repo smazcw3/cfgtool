@@ -27,7 +27,7 @@ class Statement():
             prefix = prefix + " "
         expr = str(self.expression)
         expr = prefix.join(expr.split("\n"))
-        return "%s = %s%s;" % (self.identifier, expr, prefix)
+        return "%s : %s%s;" % (self.identifier, expr, prefix)
 
 class Expression():
     def __init__(self, components):
@@ -62,11 +62,8 @@ class Element():
         return "Element[%s, %s]" % (self.term, self.modifier)
 
     def __str__(self):
-        prefix = ""
-        if self.modifier == "&" or self.modifier == "~":
-            prefix = self.modifier
-        out = prefix + str(self.term)
-        if (not prefix) and self.modifier:
+        out = str(self.term)
+        if self.modifier:
             out = out + self.modifier
         return out
 
@@ -172,8 +169,6 @@ class Parser():
 
     def _parse_component(self):
         elements = []
-        elm = self._parse_element()
-        elements.append(elm)
         while (not self._token.token == Token.PIPE) and\
               (not self._token.token == Token.SEMICOLON) and\
               (not self._token.token == Token.CLOSE_PARENTHESIS) and\
