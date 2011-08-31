@@ -1,12 +1,11 @@
 
-grammar = statement*
+grammar = statement *
         ;
 
 statement = IDENTIFIER "=" expression ";"
           ;
 
-expression = component "|" expression
-           | component
+expression = component ("|" component) *
            ;
 
 component = element +
@@ -23,6 +22,7 @@ element = term "*"
 term = IDENTIFIER
      | STRING
      | "(" expression ")"
+     | "(" ")"
      ;
 
 

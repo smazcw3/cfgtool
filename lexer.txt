@@ -1,0 +1,72 @@
+
+token = identifier
+      | string
+      | special_token
+      | spacing
+      | comment
+      | error
+      | end
+      ;
+
+
+identifier = identifier_first identifier_rest*
+           ;
+
+identifier_first = letter | "_"
+                 ;
+
+identifier_rest = letter | digit | "_"
+                ;
+
+string = "\"" (string_char | escape_sequence) * "\""
+       ;
+
+string_char = ~("\"" | "\n") char
+            ;
+
+escape_sequence = normal_escape
+                | digit_escape
+                ;
+
+normal_escape = "\\a"
+              | "\\b"
+              | "\\f"
+              | "\\n"
+              | "\\r"
+              | "\\t"
+              | "\\v"
+              | "\\\\"
+              | "\\\""
+              | "\\'"
+              | "\\\n"
+              ; 
+
+digit_escape = "\\" digit digit digit
+             | "\\" digit digit
+             | "\\" digit
+             ;
+
+special_token = "=" | ";" | "*" | "+" | "?"
+              | "~" | "&" | "(" | ")"
+              ;
+
+spacing = space +
+        ;
+
+space = " "
+      | "\t"
+      | "\r"
+      | "\n"
+      ;
+
+comment = "#" not_newline *
+        ;
+
+not_newline = ~("\n") char
+            ;
+
+error = char
+      ;
+
+end = ~(char)
+    ;
