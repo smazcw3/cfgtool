@@ -1,3 +1,7 @@
+start
+	: translation_unit EOF
+	;
+
 primary_expression
 	: IDENTIFIER
 	| CONSTANT
